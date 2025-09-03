@@ -1,0 +1,10 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      //tudo que está relacionado a src vai ser visto como um só caminho 
+      "@/*":["./src/*"]
+    }
+  }
+}
