@@ -3,8 +3,8 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      //tudo que está relacionado a src vai ser visto como um só caminho 
-      "@/*":["./src/*"]
+      //tudo que está relacionado a src vai ser visto como um só caminho
+      "@/*": ["./src/*"]
     }
   }
 }
