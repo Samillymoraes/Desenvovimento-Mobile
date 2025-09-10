@@ -1,17 +1,25 @@
-import { Text } from "react-native";
+import { FilterStatus } from "@/Types/FilterStatus";
+import { Text, TouchableOpacity, TouchableOpacityProps } from "react-native";
 import { styles } from "./styles";
-import React, { useState } from "react";
-import { Button } from "../Button";
-import { Input } from "../Input";
+import { StatusIcon } from "../StatusIcon";
 
-export function Filter() {
-    const [input, setInput] = useState('');
-    const [pendente, setPendente] = useState(false);
-    const [comprado, setComprado] = useState(false);
+type Props = TouchableOpacityProps & {
+  status: FilterStatus;
+  isActive: boolean;
+};
 
-    return(
-        <>
-        
-        </>
-    );
+export function Filter({ status, isActive, ...rest }: Props) {
+  return (
+    <TouchableOpacity
+      style={[styles.container, { opacity: isActive ? 1 : 0.5 }]}
+      activeOpacity={0.8}
+      {...rest}
+    >
+      <StatusIcon status={status} />
+
+      <Text style={styles.title}>
+        {status === FilterStatus.DONE ? "Comprados" : "Pendentes"}
+      </Text>
+    </TouchableOpacity>
+  );
 }
