@@ -1,6 +1,13 @@
-import { Text, View, Image, TouchableOpacity, FlatList } from "react-native";
-import {useState, useEffect} from "react";
-//import {itemStorage, ItemStorage} from "@/storage/itemStorage";
+import {
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  FlatList,
+  Alert,
+} from "react-native";
+import { useState, useEffect } from "react";
+import { itemStorage, ItemsStorage } from "@/storage/itemStorage";
 
 import { styles } from "./styles";
 import { FilterStatus } from "@/Types/FilterStatus";
@@ -12,25 +19,29 @@ import { Item } from "@/components/Item";
 
 const FILTER_STATUS: FilterStatus[] = [FilterStatus.PENDING, FilterStatus.DONE];
 
-const ITEMS = [
-  {
-    id: "1",
-    status: FilterStatus.DONE,
-    description: "1 pacote de café",
-  },
-  {
-    id: "2",
-    status: FilterStatus.PENDING,
-    description: "3 pacotes de macarrão",
-  },
-  {
-    id: "3",
-    status: FilterStatus.PENDING,
-    description: "3 cebolas",
-  },
-];
-
 export function Home() {
+  const [filter, setFilter] = useState(FilterStatus.PENDING);
+  const [description, setDescription] = useState("");
+  const [items, setItems] = useState<ItemsStorage[]>([]);
+
+  async function handledAdd() {
+    if (!description.trim) {
+      return Alert.alert("Adicionar", "Informe a descrição para adicionar");
+    }
+
+    const newItem = {
+      id: Math.random().toString().substring(2),
+      description,
+      status: FilterStatus.PENDING,
+    };
+    await itemStorage.add(newItem);
+    await itemsByStatus();
+
+    Alert.alert("Adicionado", `Adicionado${description}`);
+    setFilter(FilterStatus.PENDING);
+    setDescription("");
+  }
+
   return (
     <View style={styles.container}>
       <Image source={require("@/assets/logo.png")} style={styles.logo} />
@@ -51,7 +62,7 @@ export function Home() {
           </TouchableOpacity>
         </View>
         <FlatList
-          data={ITEMS}
+          data={[]}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <Item
