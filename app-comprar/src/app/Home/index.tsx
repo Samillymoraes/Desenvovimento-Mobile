@@ -1,23 +1,43 @@
-import { Text, View, Image, TouchableOpacity } from "react-native";
+import { Text, View, Image, TouchableOpacity, FlatList } from "react-native";
+import {useState, useEffect} from "react";
+//import {itemStorage, ItemStorage} from "@/storage/itemStorage";
+
 import { styles } from "./styles";
+import { FilterStatus } from "@/Types/FilterStatus";
+
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { Filter } from "@/components/Filter";
-import { FilterStatus } from "@/Types/FilterStatus";
 import { Item } from "@/components/Item";
 
 const FILTER_STATUS: FilterStatus[] = [FilterStatus.PENDING, FilterStatus.DONE];
 
+const ITEMS = [
+  {
+    id: "1",
+    status: FilterStatus.DONE,
+    description: "1 pacote de café",
+  },
+  {
+    id: "2",
+    status: FilterStatus.PENDING,
+    description: "3 pacotes de macarrão",
+  },
+  {
+    id: "3",
+    status: FilterStatus.PENDING,
+    description: "3 cebolas",
+  },
+];
+
 export function Home() {
   return (
     <View style={styles.container}>
-      {/* <Text style={styles.text}>Hello, World!</Text> */}
       <Image source={require("@/assets/logo.png")} style={styles.logo} />
 
       <View style={styles.form}>
         <Input placeholder="O que você precisa comprar?" />
         <Button title="Entrar" />
-        
       </View>
 
       <View style={styles.content}>
@@ -30,18 +50,23 @@ export function Home() {
             <Text style={styles.clearText}>Limpar</Text>
           </TouchableOpacity>
         </View>
-        <View>
-          <Item
-            data={{ description: "3 Tomates", status: FilterStatus.PENDING }}
-            onRemove={() => {}}
-            onStatus={() => {}}
-          />
-          <Item
-            data={{ description: "1 Pacote de Arroz", status: FilterStatus.DONE }}
-            onRemove={() => {}}
-            onStatus={() => {}}
-          />
-        </View>
+        <FlatList
+          data={ITEMS}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <Item
+              data={item}
+              onStatus={() => console.log("mudar o status")}
+              onRemove={() => console.log("remover")}
+            />
+          )}
+          showsVerticalScrollIndicator={false}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          contentContainerStyle={styles.listContent}
+          ListEmptyComponent={() => (
+            <Text style={styles.empty}>Nenhum item aqui.</Text>
+          )}
+        />
       </View>
     </View>
   );
